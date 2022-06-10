@@ -1,23 +1,23 @@
-import React from 'react'
-import {createStackNavigator} from '@react-navigation/stack'
-import Favorites from '../../screens/Favorites'
+import React from 'react';
+import {createStackNavigator} from '@react-navigation/stack';
+import Favorites from '../../screens/Favorites';
 
-const Stack = createStackNavigator()
+const Stack = createStackNavigator();
 
-type Props = {}
+type Props = {};
 
 const FavoriteStackNavigation = ({}: Props) => {
   return (
     <Stack.Navigator>
-      <Stack.Screen 
-        name='MyFavorites'
+      <Stack.Screen
+        name="MyFavorites"
         component={Favorites}
         options={{
-          title: 'Mis Favoritos'
+          title: 'Mis Favoritos',
         }}
       />
     </Stack.Navigator>
-  )
-}
+  );
+};
 
-export default FavoriteStackNavigation
+export default FavoriteStackNavigation;

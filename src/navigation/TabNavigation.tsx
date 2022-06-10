@@ -1,9 +1,9 @@
-import React from 'react'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import React from 'react';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
 import Heart from '../icons/Heart';
 import AccountIcon from '../icons/AccountIcon';
-import { Image, StyleSheet } from 'react-native';
+import {Image, StyleSheet} from 'react-native';
 import AccountStackNavigation from './AccountStackNavigation';
 import FavoriteStackNavigation from './FavoriteStackNavigation';
 import PokedexStackNavigation from './PokedexStackNavigation';
@@ -11,9 +11,9 @@ import PokedexStackNavigation from './PokedexStackNavigation';
 const imgsource = require('../assets/pokeball.png');
 
 const Tab = createBottomTabNavigator();
-type Props = {}
+type Props = {};
 
-const TabNavigation = ({ }: Props) => {
+const TabNavigation = ({}: Props) => {
   return (
     <Tab.Navigator>
       <Tab.Screen
@@ -22,7 +22,7 @@ const TabNavigation = ({ }: Props) => {
         options={{
           tabBarLabel: 'Accounts',
           tabBarIcon: () => <AccountIcon color={'#000'} />,
-          headerShown:false
+          headerShown: false,
         }}
       />
       <Tab.Screen
@@ -33,7 +33,7 @@ const TabNavigation = ({ }: Props) => {
           tabBarIcon: () => (
             <Image source={imgsource} style={styles.pokeballIconStyle} />
           ),
-          headerShown:false
+          headerShown: false,
         }}
       />
       <Tab.Screen
@@ -42,14 +42,14 @@ const TabNavigation = ({ }: Props) => {
         options={{
           tabBarLabel: 'Favoritos',
           tabBarIcon: () => <Heart color={'red'} />,
-          headerShown:false
+          headerShown: false,
         }}
       />
     </Tab.Navigator>
-  )
-}
+  );
+};
 
-export default TabNavigation
+export default TabNavigation;
 
 const styles = StyleSheet.create({
   pokeballIconStyle: {
