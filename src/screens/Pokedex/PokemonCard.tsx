@@ -1,4 +1,4 @@
-import {View, Text} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {PokemonDetailsConverter} from '../../utils/typeConverters';
 import {PokemonDetailsType} from '../../utils/types';
@@ -41,17 +41,37 @@ const PokemonCard = ({name, url}: Props) => {
   }
 
   return (
-    <View>
-      <Text>{name}</Text>
-      {isLoading && <Text>Loading...</Text>}
+    <View style={styles.cardFrame}>
+      {isLoading ? <Text>Loading...</Text> : <Text>#{`${pokemonDetail?.id}`.padStart(3,"0")}</Text>}
       {pokemonDetail && (
         <Image
           source={{uri: pokemonDetail.imageUrl}}
-          style={{width: 20, height: 20}}
+          style={styles.pokemonImage}
         />
       )}
+      {!isLoading && <Text> {name}</Text>}
     </View>
   );
 };
 
 export default PokemonCard;
+
+const styles = StyleSheet.create({
+  pokemonImage:{
+    width:60,
+    height:60,
+  },
+  cardFrame:{
+    flex: 1,
+    justifyContent:'center',
+    alignItems: 'center',
+    height: 130,
+    width: 130,
+    margin: 20,
+    padding:10,
+    borderStyle: 'solid',
+    borderColor: "#000",
+    borderWidth: 2,
+    borderRadius: 65,
+  }
+})
