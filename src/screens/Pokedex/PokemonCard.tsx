@@ -5,51 +5,21 @@ import {PokemonDetailsType} from '../../utils/types';
 import {Image} from 'react-native';
 
 type Props = {
-  name: string;
-  url: string;
+  pok : PokemonDetailsType | null
 };
 
-const PokemonCard = ({name, url}: Props) => {
-  const [pokemonDetail, setPokemonDetail] = useState<PokemonDetailsType | null>(
-    null,
-  );
-  const [isLoading, setIsLoading] = useState(false);
-  const [isError, setIsError] = useState(false);
-
-  useEffect(() => {
-    setIsLoading(true);
-    fetch(url)
-      .then(res => res.json())
-      .then(response => {
-        setPokemonDetail(PokemonDetailsConverter(response));
-        setIsLoading(false);
-      })
-      .catch(err => {
-        console.error(err);
-        setIsLoading(false);
-        setIsError(true);
-      });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  if (isError) {
-    return (
-      <View>
-        <Text>Error</Text>
-      </View>
-    );
-  }
-
+const PokemonCard = ({pok}: Props) => {
+  
+  console.log(`pokemon ${pok?.id}`);
+  if (!pok) return <View></View>
   return (
     <View style={styles.cardFrame}>
-      {isLoading ? <Text>Loading...</Text> : <Text>#{`${pokemonDetail?.id}`.padStart(3,"0")}</Text>}
-      {pokemonDetail && (
-        <Image
-          source={{uri: pokemonDetail.imageUrl}}
-          style={styles.pokemonImage}
-        />
-      )}
-      {!isLoading && <Text> {name}</Text>}
+      <Text>#{`${pok.id}`.padStart(3,"0")}</Text>
+      <Image
+        source={{uri: pok.imageUrl}}
+        style={styles.pokemonImage}
+      />
+      <Text> {pok.name}</Text>
     </View>
   );
 };

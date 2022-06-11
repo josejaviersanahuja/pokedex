@@ -1,34 +1,43 @@
-import {Button, FlatList, SafeAreaView, StyleSheet, Text, ScrollView} from 'react-native';
-import React, {useEffect, useState} from 'react';
-import {getPokemons} from '../../api/PokemonController';
-import {PokedexType} from '../../utils/types';
+import {Button, FlatList, ListRenderItemInfo, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
+import {getPokemonDetail, getPokemons} from '../../api/PokemonController';
+import {PokedexType, PokemonDetailsType} from '../../utils/types';
 import {pokedexConverter} from '../../utils/typeConverters';
 import PokemonCard from './PokemonCard';
 
 type Props = {};
 
 const Pokedex = ({}: Props) => {
-  const [pokemons, setPokemons] = useState<PokedexType>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [pokemons, setPokemons] = useState<(PokemonDetailsType | null)[]>([]);
+  const isLoading = useRef(false)
   const [page, setPage] = useState(0);
   const [isError, setIsError] = useState(false);
-
+  const pokedex = useRef<PokedexType>([])
+  
   useEffect(() => {
-    setIsLoading(true);
+    isLoading.current = true;
     getPokemons(page)
       .then(res => res.json())
       .then(response => {
-        setPokemons(pokedexConverter(response.results));
-        setIsLoading(false);
+        const newList : PokedexType = [...pokedex.current,...pokedexConverter(response.results)]
+        pokedex.current = newList
+        const allPromises = newList.map((value)=> getPokemonDetail(value.url))
+        Promise.all(allPromises)
+        .then( res => {
+          console.log("loading...");
+          res && setPokemons(res)
+          isLoading.current = false;
+        })
       })
       .catch(err => {
         console.error(err);
-        setIsLoading(false);
+        isLoading.current = false;
+        console.log(page);
         setIsError(true);
       });
   }, [page]);
 
-  if (isError) {
+  if (!pokemons) {
     return (
       <SafeAreaView>
         <Text>Error</Text>
@@ -37,20 +46,20 @@ const Pokedex = ({}: Props) => {
   }
   return (
     <SafeAreaView>
-      <ScrollView style={styles.main}>
-        {isLoading && <Text>Loading...</Text>}
-        {/* {pokemons.length > 0 &&
-          pokemons.map((e, i) => (
-            <PokemonCard key={e.name + i} name={e.name} url={e.url} />
-          ))} */}
+      <View style={styles.main}>
+        {isLoading.current && <Text>Loading...</Text>}
+        
         <FlatList 
-          data={pokemons}
-          numColumns={2}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={(e) => e.name + e.url}
-          renderItem={(e) => <PokemonCard name={e.item.name} url={e.item.url}/>}
-        />
-        {page > 0 && (
+        data={pokemons}
+        numColumns={2}
+        showsVerticalScrollIndicator={false}
+        keyExtractor={(e, index) => e ? String(e.id) : String(index)}
+        renderItem={(e) => <PokemonCard pok={e.item} />}
+        onEndReached={()=> setPage(prev => prev + 1)}
+        onEndReachedThreshold={0.4}
+        refreshing={isLoading.current}
+      />    
+        {/* {page > 0 && (
           <Button
             title="Página anterior"
             onPress={() => setPage(prev => prev - 1)}
@@ -62,8 +71,8 @@ const Pokedex = ({}: Props) => {
             title="Siguiente Página"
             onPress={() => setPage(prev => prev + 1)}
           />
-        )}
-      </ScrollView>
+        )} */}
+      </View>
     </SafeAreaView>
   );
 };
