@@ -14,14 +14,16 @@ const PokedexStackNavigation = ({}: Props) => {
         name="MyPokedex"
         component={Pokedex}
         options={{
-          title: 'Atrapalos a todos',
+          title: "",
+          headerTransparent: true,
         }}
       />
       <Stack.Screen
         name="Pokemon"
         component={Pokemon}
         options={{
-          title: 'Pokemon',
+          title: '',
+          headerTransparent: true,
         }}
       />
     </Stack.Navigator>
