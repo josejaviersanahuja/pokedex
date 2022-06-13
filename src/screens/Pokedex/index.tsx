@@ -1,40 +1,42 @@
-import {Button, FlatList, ListRenderItemInfo, SafeAreaView, StyleSheet, Text, View} from 'react-native';
-import React, {useEffect, useMemo, useRef, useState} from 'react';
+import {
+  ActivityIndicator,
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import React, {Dispatch, useLayoutEffect, useRef, useState} from 'react';
+import {isEqual} from 'lodash';
 import {getPokemonDetail, getPokemons} from '../../api/PokemonController';
 import {PokedexType, PokemonDetailsType} from '../../utils/types';
 import {pokedexConverter} from '../../utils/typeConverters';
 import PokemonCard from './PokemonCard';
 
-type Props = {};
-
-const Pokedex = ({}: Props) => {
+const Pokedex = () => {
   const [pokemons, setPokemons] = useState<(PokemonDetailsType | null)[]>([]);
-  const isLoading = useRef(false)
   const [page, setPage] = useState(0);
-  const [isError, setIsError] = useState(false);
-  const pokedex = useRef<PokedexType>([])
-  
-  useEffect(() => {
-    isLoading.current = true;
-    getPokemons(page)
-      .then(res => res.json())
-      .then(response => {
-        const newList : PokedexType = [...pokedex.current,...pokedexConverter(response.results)]
-        pokedex.current = newList
-        const allPromises = newList.map((value)=> getPokemonDetail(value.url))
-        Promise.all(allPromises)
-        .then( res => {
-          console.log("loading...");
-          res && setPokemons(res)
-          isLoading.current = false;
+  const [isThereNext, setIsThereNext] = useState(true);
+  const pokedex = useRef<PokedexType>([]);
+
+  useLayoutEffect(() => {
+    isThereNext &&
+      getPokemons(page)
+        .then(res => res.json())
+        .then(response => {
+          !response.next && setIsThereNext(false);
+          const newList: PokedexType = pokedexConverter(response.results);
+          pokedex.current = newList;
+          const allPromises = newList.map(value => getPokemonDetail(value.url));
+          Promise.all(allPromises).then(res => {
+            res && setPokemons([...pokemons, ...res]);
+          });
         })
-      })
-      .catch(err => {
-        console.error(err);
-        isLoading.current = false;
-        console.log(page);
-        setIsError(true);
-      });
+        .catch(err => {
+          console.error(err);
+          console.log(page);
+        });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);
 
   if (!pokemons) {
@@ -47,31 +49,13 @@ const Pokedex = ({}: Props) => {
   return (
     <SafeAreaView>
       <View style={styles.main}>
-        {isLoading.current && <Text>Loading...</Text>}
-        
-        <FlatList 
-        data={pokemons}
-        numColumns={2}
-        showsVerticalScrollIndicator={false}
-        keyExtractor={(e, index) => e ? String(e.id) : String(index)}
-        renderItem={(e) => <PokemonCard pok={e.item} />}
-        onEndReached={()=> setPage(prev => prev + 1)}
-        onEndReachedThreshold={0.4}
-        refreshing={isLoading.current}
-      />    
-        {/* {page > 0 && (
-          <Button
-            title="Página anterior"
-            onPress={() => setPage(prev => prev - 1)}
-
-          />
-        )}
-        {page <= 60 && (
-          <Button
-            title="Siguiente Página"
-            onPress={() => setPage(prev => prev + 1)}
-          />
-        )} */}
+        {false && <Text>Loading...</Text>}
+        <MemoizedMyFlatList
+          page={page}
+          pokemons={pokemons}
+          setPage={setPage}
+          isThereNext={isThereNext}
+        />
       </View>
     </SafeAreaView>
   );
@@ -79,13 +63,47 @@ const Pokedex = ({}: Props) => {
 
 export default Pokedex;
 
+type Props = {
+  pokemons: (PokemonDetailsType | null)[];
+  setPage: Dispatch<number>;
+  page: number;
+  isThereNext: boolean;
+};
+const MyFlatList = ({page, pokemons, setPage, isThereNext}: Props) => {
+  return (
+    <FlatList
+      data={pokemons}
+      numColumns={2}
+      showsVerticalScrollIndicator={false}
+      keyExtractor={(e, index) => (e ? String(e.id) : String(index))}
+      renderItem={e => <PokemonCard pok={e.item} />}
+      onEndReached={() => isThereNext && setPage(page + 1)}
+      onEndReachedThreshold={0.4}
+      maxToRenderPerBatch={20}
+      initialNumToRender={20}
+      getItemLayout={(data, index) => ({
+        length: 170,
+        offset: 170 * index,
+        index,
+      })}
+      ListFooterComponent={isThereNext ? <ActivityIndicator /> : null}
+    />
+  );
+};
+
+const arePropsEqual = (prevProps: Props, newProps: Props) => {
+  return isEqual(prevProps.pokemons, newProps.pokemons);
+};
+
+const MemoizedMyFlatList = React.memo(MyFlatList, arePropsEqual);
+
 const styles = StyleSheet.create({
-  main:{
-    marginBottom:60,
+  main: {
+    marginBottom: 40,
     paddingHorizontal: 20,
   },
-  botones:{
-    marginHorizontal:20,
-    margin:10,
-  }
-})
+  botones: {
+    marginHorizontal: 20,
+    margin: 10,
+  },
+});

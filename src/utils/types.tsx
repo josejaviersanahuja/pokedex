@@ -10,3 +10,7 @@ export type PokemonDetailsType = {
   order: number;
   imageUrl: string;
 };
+
+export type ScreenTag = {
+  Pokemon: PokemonDetailsType | undefined;
+};
