@@ -1,19 +1,31 @@
 /* eslint-disable react-native/no-inline-styles */
 import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
-import React from 'react';
-import {RouteProp} from '@react-navigation/native';
+import React, { useEffect } from 'react';
+import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {PokemonDetailsType} from '../../utils/types';
 import {POKEMON_TYPE_COLORS} from '../../utils/constants';
 import PokemonExtraDetails from './PokemonExtraDetails';
 import {SvgUri} from 'react-native-svg';
 import {capitalize} from 'lodash';
+import Heart from '../../icons/Heart';
+import BackIcon from '../../icons/BackIcon';
 
 type Props = {
+  navigation: NavigationProp<any, any>;
   route: RouteProp<{params: PokemonDetailsType}>;
 };
 
-const Pokemon = ({route}: Props) => {
+const Pokemon = ({route, navigation}: Props) => {
   const {id, imageUrl, name, order, type} = route.params;
+
+  useEffect(() => {
+    navigation.setOptions({
+      headerRight: () => <Heart style={styles.headerStyleHeart} height={45} width={45} strokeWidth={1} />,
+      headerLeft: () => <BackIcon onPress={navigation.goBack} style={styles.headerStyleBackBtn} />,
+    })
+  }, [navigation, route])
+  
+
   return (
     <SafeAreaView>
       <View
@@ -59,6 +71,14 @@ const Pokemon = ({route}: Props) => {
 export default Pokemon;
 
 const styles = StyleSheet.create({
+  headerStyleBackBtn: {
+    marginLeft:20, 
+    color: '#000'
+  },
+  headerStyleHeart: {
+    marginRight: 45,
+    color: '#f00',
+  },
   topBackGround: {
     position: 'relative',
     flex: 0,

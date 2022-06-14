@@ -10,24 +10,8 @@ type Props = {
 };
 
 const StatAndBar = ({name, base_stat}: Props) => {
-  const paintingBarStyle = (num: number) => {
-    let bgc = '#f00';
-    if (num > 50) bgc = '#f80';
-    if (num > 100) bgc = '#00f';
-    const innerStyle = StyleSheet.create({
-      progressBar: {
-        backGroundColor: bgc,
-        width: Math.floor((num * 150) / 170),
-        position: 'absolute',
-        left: 0,
-        top: 0,
-        height: 5,
-      },
-    });
-    console.log(innerStyle);
-
-    return innerStyle;
-  };
+  
+  const innerStyle = paintingBarStyle(base_stat);
 
   return (
     <View style={styles.barWrapper}>
@@ -39,7 +23,7 @@ const StatAndBar = ({name, base_stat}: Props) => {
         {`${base_stat}`}
       </Text>
       <View style={styles.bar}>
-        <View style={paintingBarStyle(base_stat).progressBar} />
+        <View style={{...styles.filledBar, backgroundColor: innerStyle.bgc, width: innerStyle.width}} />
       </View>
     </View>
   );
@@ -60,7 +44,7 @@ const styles = StyleSheet.create({
   bar: {
     position: 'relative',
     backgroundColor: '#aaa',
-    width: 170,
+    width: 160,
     height: 5,
     alignSelf: 'center',
   },
@@ -72,3 +56,14 @@ const styles = StyleSheet.create({
     width: 10,
   },
 });
+
+const paintingBarStyle = (num: number) => {
+  let bgc = '#f00';
+  if (num > 50) bgc = '#f80';
+  if (num > 100) bgc = '#dd0';
+  if (num > 130) bgc = '#00f';
+  
+  const width = 160 * num/150;
+
+  return {width, bgc}
+};

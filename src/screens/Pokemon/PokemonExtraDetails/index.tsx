@@ -1,4 +1,4 @@
-import {Image, StyleSheet, View} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {getPokemonExtraDetails} from '../../../api/PokemonController';
 import {PokemonExtraDetailConverter} from '../../../utils/typeConverters';
@@ -13,10 +13,13 @@ type Props = {
 const PokemonExtraDetails = ({id}: Props) => {
   const [extraDetails, setExtraDetails] =
     useState<PokemonExtraDetailsType | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true)
     getPokemonExtraDetails(id).then(response => {
       setExtraDetails(PokemonExtraDetailConverter(response));
+      setIsLoading(false)
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -26,7 +29,6 @@ const PokemonExtraDetails = ({id}: Props) => {
   }
   return (
     <View style={styles.extraDetailWrapper}>
-      <Image source={{uri: 'a'}} />
       <View style={styles.typesWrapper}>
         {extraDetails.types.map((e, i) => (
           <PillTypes type={e.name} key={e.name + i} />
