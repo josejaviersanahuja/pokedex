@@ -34,7 +34,6 @@ const Pokedex = () => {
         })
         .catch(err => {
           console.error(err);
-          console.log(page);
         });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [page]);

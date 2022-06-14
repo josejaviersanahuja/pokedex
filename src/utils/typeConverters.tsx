@@ -1,4 +1,8 @@
-import {PokedexType, PokemonDetailsType} from './types';
+import {
+  PokedexType,
+  PokemonDetailsType,
+  PokemonExtraDetailsType,
+} from './types';
 
 export const pokedexConverter = (result: any): PokedexType => {
   if (Array.isArray(result)) {
@@ -28,12 +32,29 @@ export const PokemonDetailsConverter = (
       type: Array.isArray(response.types)
         ? response.types[0].type.name
         : 'notype',
-      imageUrl:
-        response.sprites && response.sprites.front_default
-          ? response.sprites.front_default
-          : 'noimage',
+      imageUrl: response?.sprites?.other.dream_world.front_default || 'noimage',
     };
     return pokDetail;
   }
   return null;
+};
+
+export const PokemonExtraDetailConverter = (
+  response: any,
+): PokemonExtraDetailsType => {
+  const pokExtraDetails: PokemonExtraDetailsType = {
+    types: [],
+    stats: [],
+  };
+  if (response && response.types) {
+    pokExtraDetails.types = Array.isArray(response.types)
+      ? response.types.map((e: {type: {name: String; url: string}}) => e.type)
+      : [];
+  }
+  if (response && response.stats && Array.isArray(response.stats)) {
+    pokExtraDetails.stats = response.stats.map((e: any) => {
+      return {base_stat: e.base_stat, name: e.stat.name};
+    });
+  }
+  return pokExtraDetails;
 };

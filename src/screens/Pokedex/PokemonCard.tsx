@@ -2,10 +2,10 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {capitalize} from 'lodash';
 import {PokemonDetailsType, ScreenTag} from '../../utils/types';
-import {Image} from 'react-native';
 import {POKEMON_TYPE_COLORS} from '../../utils/constants';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
+import {SvgUri} from 'react-native-svg';
 
 type Props = {
   pok: PokemonDetailsType | null;
@@ -35,7 +35,12 @@ const PokemonCard = ({pok}: Props) => {
           }}>
           #{`${pok.id}`.padStart(3, '0')}
         </Text>
-        <Image source={{uri: pok.imageUrl}} style={styles.pokemonImage} />
+        <SvgUri
+          uri={pok.imageUrl}
+          style={styles.pokemonImage}
+          width={90}
+          height={90}
+        />
         <Text
           style={{
             ...styles.pokemontText,
@@ -54,8 +59,8 @@ export default PokemonCard;
 const styles = StyleSheet.create({
   pokemonImage: {
     position: 'absolute',
-    width: 90,
-    height: 90,
+    width: 50,
+    height: 50,
     right: 0,
   },
   pokemontText: {

@@ -20,3 +20,9 @@ export const getPokemonDetail = (
     .then(res => res.json())
     .then(PokemonDetailsConverter);
 };
+
+export const getPokemonExtraDetails = (id: number): Promise<any> => {
+  const url = API_URL + `pokemon/${id}`;
+
+  return fetch(url).then(res => res.json());
+};

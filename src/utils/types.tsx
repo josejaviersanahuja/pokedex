@@ -14,3 +14,8 @@ export type PokemonDetailsType = {
 export type ScreenTag = {
   Pokemon: PokemonDetailsType | undefined;
 };
+
+export type PokemonExtraDetailsType = {
+  types: {name: string; url: string}[];
+  stats: {name: string; base_stat: number}[];
+};
