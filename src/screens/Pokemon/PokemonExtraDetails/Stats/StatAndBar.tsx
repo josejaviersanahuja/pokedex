@@ -10,7 +10,6 @@ type Props = {
 };
 
 const StatAndBar = ({name, base_stat}: Props) => {
-  
   const innerStyle = paintingBarStyle(base_stat);
 
   return (
@@ -23,7 +22,13 @@ const StatAndBar = ({name, base_stat}: Props) => {
         {`${base_stat}`}
       </Text>
       <View style={styles.bar}>
-        <View style={{...styles.filledBar, backgroundColor: innerStyle.bgc, width: innerStyle.width}} />
+        <View
+          style={{
+            ...styles.filledBar,
+            backgroundColor: innerStyle.bgc,
+            width: innerStyle.width,
+          }}
+        />
       </View>
     </View>
   );
@@ -62,8 +67,8 @@ const paintingBarStyle = (num: number) => {
   if (num > 50) bgc = '#f80';
   if (num > 100) bgc = '#dd0';
   if (num > 130) bgc = '#00f';
-  
-  const width = 160 * num/150;
 
-  return {width, bgc}
+  const width = (160 * num) / 150;
+
+  return {width, bgc};
 };
