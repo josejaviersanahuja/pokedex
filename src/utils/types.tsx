@@ -19,3 +19,9 @@ export type PokemonExtraDetailsType = {
   types: {name: string; url: string}[];
   stats: {name: string; base_stat: number}[];
 };
+
+export type User = {
+  username: string;
+  name: string;
+  email: string;
+}
