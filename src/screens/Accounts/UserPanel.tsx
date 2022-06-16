@@ -1,16 +1,15 @@
 import {View, Text} from 'react-native';
 import React from 'react';
+import {Auth} from '../../utils/types';
 
 type Props = {
-  auth: any;
+  auth: Auth;
 };
 
 const UserPanel = ({auth}: Props) => {
-  console.log(auth);
-
   return (
     <View>
-      <Text>UserPanel</Text>
+      <Text>Hola, {auth.email.split('@')[0]}</Text>
     </View>
   );
 };

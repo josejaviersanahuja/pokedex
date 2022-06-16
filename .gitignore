@@ -62,3 +62,6 @@ buck-out/
 
 # assets staticos de la app
 src/assets
+
+# firebase configuration
+android/app/google-services.json

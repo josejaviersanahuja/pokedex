@@ -1,6 +1,6 @@
 /* eslint-disable react-native/no-inline-styles */
 import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
-import React, { useEffect } from 'react';
+import React, {useEffect} from 'react';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {PokemonDetailsType} from '../../utils/types';
 import {POKEMON_TYPE_COLORS} from '../../utils/constants';
@@ -20,11 +20,22 @@ const Pokemon = ({route, navigation}: Props) => {
 
   useEffect(() => {
     navigation.setOptions({
-      headerRight: () => <Heart style={styles.headerStyleHeart} height={45} width={45} strokeWidth={1} />,
-      headerLeft: () => <BackIcon onPress={navigation.goBack} style={styles.headerStyleBackBtn} />,
-    })
-  }, [navigation, route])
-  
+      headerRight: () => (
+        <Heart
+          style={styles.headerStyleHeart}
+          height={45}
+          width={45}
+          strokeWidth={1}
+        />
+      ),
+      headerLeft: () => (
+        <BackIcon
+          onPress={navigation.goBack}
+          style={styles.headerStyleBackBtn}
+        />
+      ),
+    });
+  }, [navigation, route]);
 
   return (
     <SafeAreaView>
@@ -72,8 +83,8 @@ export default Pokemon;
 
 const styles = StyleSheet.create({
   headerStyleBackBtn: {
-    marginLeft:20, 
-    color: '#000'
+    marginLeft: 20,
+    color: '#000',
   },
   headerStyleHeart: {
     marginRight: 45,

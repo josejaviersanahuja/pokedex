@@ -1,5 +1,5 @@
-import * as React from "react"
-import Svg, { SvgProps, Path } from "react-native-svg"
+import * as React from 'react';
+import Svg, {SvgProps, Path} from 'react-native-svg';
 
 const BackIcon = (props: SvgProps) => (
   <Svg height={45} width={45} viewBox="0 0 21 21" {...props}>
@@ -12,6 +12,6 @@ const BackIcon = (props: SvgProps) => (
       strokeLinejoin="round"
     />
   </Svg>
-)
+);
 
-export default BackIcon
+export default BackIcon;

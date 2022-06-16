@@ -1,38 +1,41 @@
-import {View, Text, StyleSheet, TextInput, Button, Alert} from 'react-native';
-import React, {useState} from 'react';
+import {Text, StyleSheet, TextInput, Button, ScrollView} from 'react-native';
+import React, {Dispatch} from 'react';
 import {useFormik} from 'formik';
 import * as yup from 'yup';
-import {INITIAL_USER} from '../../utils/constants';
-import SignUp from './SignUp';
-import {login} from '../../firebase/auth';
+import {signup} from '../../firebase/auth';
+import {PostNewUser} from '../../firebase/firestore';
 
-type Props = {};
+type Props = {
+  setIsSignUp: Dispatch<boolean>;
+};
 
-const Login = ({}: Props) => {
-  const [isSignUp, setIsSignUp] = useState(false);
+const INITIAL_SIGNUP_FORM = {
+  email: '',
+  password: '',
+  segunda_password: '',
+};
+
+const SignUp = ({setIsSignUp}: Props) => {
   const formik = useFormik({
-    initialValues: INITIAL_USER,
+    initialValues: INITIAL_SIGNUP_FORM,
     validationSchema: yup.object(validationSchema()),
     validateOnChange: false,
     onSubmit: ({email, password}) => {
-      login(email, password)
+      PostNewUser(email);
+      signup(email, password)
         .then(() => {
-          formik.setValues(INITIAL_USER);
+          formik.setValues(INITIAL_SIGNUP_FORM);
+          setIsSignUp(false);
         })
-        .catch(err => {
-          console.error(err);
-          Alert.alert(`Error al hacer login: ${err}`);
-        });
+        .catch(err => console.error(err));
     },
   });
-  if (isSignUp) {
-    return <SignUp setIsSignUp={setIsSignUp} />;
-  }
+
   return (
-    <View style={styles.wrapper}>
+    <ScrollView style={styles.wrapper}>
       <Text style={styles.title}>Iniciar Sesión</Text>
       <TextInput
-        placeholder="Nombre de usuario"
+        placeholder="Email"
         style={styles.input}
         autoCapitalize="none"
         value={formik.values.email}
@@ -41,7 +44,7 @@ const Login = ({}: Props) => {
         }}
       />
       <TextInput
-        placeholder="Contraseñas"
+        placeholder="Contraseña"
         style={styles.input}
         autoCapitalize="none"
         secureTextEntry
@@ -50,34 +53,49 @@ const Login = ({}: Props) => {
           formik.setFieldValue('password', text);
         }}
       />
+      <TextInput
+        placeholder="Validar Contraseña"
+        style={styles.input}
+        autoCapitalize="none"
+        secureTextEntry
+        value={formik.values.segunda_password}
+        onChangeText={text => {
+          formik.setFieldValue('segunda_password', text);
+        }}
+      />
       <Button
         title="Entrar"
         onPress={formik.handleSubmit}
         disabled={formik.values.email === '' || formik.values.password === ''}
       />
       <Button
-        title="Primera vez aquí?"
-        onPress={() => setIsSignUp(true)}
+        title="Volver Al Login"
+        onPress={() => setIsSignUp(false)}
         color="#080"
       />
       <Text>{formik.errors.email}</Text>
       <Text>{formik.errors.password}</Text>
-    </View>
+      <Text>{formik.errors.segunda_password}</Text>
+    </ScrollView>
   );
 };
 
-export default Login;
+export default SignUp;
 
 const validationSchema = () => {
   return {
     email: yup
       .string()
-      .required('El usuario es obligatorio')
+      .required('El email es obligatorio')
       .email('No tiene formato de email'),
     password: yup
       .string()
       .required('La Contraseña es obligatoria')
       .min(6, 'Debe tener un mínimo de 6 caracteres'),
+    segunda_password: yup
+      .string()
+      .required('Es obligatorio validar la contraseña')
+      .oneOf([yup.ref('password'), null], 'La contraseña no coincide'),
   };
 };
 

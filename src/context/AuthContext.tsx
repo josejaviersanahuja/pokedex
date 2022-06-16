@@ -1,24 +1,41 @@
-import React, {createContext, ReactElement, useState} from 'react';
-import { User } from '../utils/types';
+import React, {
+  createContext,
+  ReactElement,
+  useContext,
+  useEffect,
+  useState,
+} from 'react';
+import {OnAuthStateChange} from '../firebase/auth';
+import {Auth} from '../utils/types';
 
-export const AuthContext = createContext<{user: User | undefined}>({
-  user: undefined,
+const AuthContext = createContext<{auth: Auth | null}>({
+  auth: null,
 });
+
+export function useAuth() {
+  return useContext(AuthContext);
+}
 
 type Props = {
   children: ReactElement;
-}
+};
 
 export function AuthProvider({children}: Props) {
-  const [auth, setAuth] = useState<User | undefined>(undefined);
+  const [auth, setAuth] = useState<Auth | null>(null);
 
-  const valueContext= {
-    user: auth,
-  }
+  useEffect(() => {
+    const unsuscribe = OnAuthStateChange(setAuth);
+
+    return () => {
+      unsuscribe();
+    };
+  }, []);
+
+  const valueContext = {
+    auth,
+  };
 
   return (
-    <AuthContext.Provider value={valueContext}>
-      {children}
-    </AuthContext.Provider>
-  )
+    <AuthContext.Provider value={valueContext}>{children}</AuthContext.Provider>
+  );
 }

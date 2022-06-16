@@ -76,6 +76,6 @@ export const POKEMON_TYPE_COLORS: {[index: string]: {bg: string; c: string}} = {
 };
 
 export const INITIAL_USER = {
-  username: '',
+  email: '',
   password: '',
 };

@@ -20,8 +20,11 @@ export type PokemonExtraDetailsType = {
   stats: {name: string; base_stat: number}[];
 };
 
-export type User = {
-  username: string;
-  name: string;
+export type Auth = {
   email: string;
-}
+};
+
+export type User = {
+  email: string;
+  coleccion: any;
+};

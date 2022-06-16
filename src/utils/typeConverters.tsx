@@ -1,7 +1,9 @@
+import {FirebaseAuthTypes} from '@react-native-firebase/auth';
 import {
   PokedexType,
   PokemonDetailsType,
   PokemonExtraDetailsType,
+  Auth,
 } from './types';
 
 export const pokedexConverter = (result: any): PokedexType => {
@@ -57,4 +59,16 @@ export const PokemonExtraDetailConverter = (
     });
   }
   return pokExtraDetails;
+};
+
+export const FirebaseUserToUserConverter = (
+  user: FirebaseAuthTypes.User | null,
+) => {
+  if (!user) {
+    return null;
+  }
+  const localUser: Auth = {
+    email: user?.email ? user.email : '',
+  };
+  return localUser;
 };
