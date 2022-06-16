@@ -1,15 +1,17 @@
 import auth from '@react-native-firebase/auth';
 import {Dispatch} from 'react';
-import {FirebaseUserToUserConverter} from '../utils/typeConverters';
-import {Auth} from '../utils/types';
+import {FirebaseUserToAuthConverter} from '../utils/typeConverters';
+import {Auth, User} from '../utils/types';
+import { GetUser } from './firestore';
 
 export const signup = (email: string, password: string) => {
   return auth().createUserWithEmailAndPassword(email, password);
 };
 
-export const OnAuthStateChange = (setUser: Dispatch<Auth | null>) => {
+export const OnAuthStateChange = (setAuth: Dispatch<Auth | null>, setCurrentUser: Dispatch<User | null>) => {
   return auth().onAuthStateChanged(user => {
-    setUser(FirebaseUserToUserConverter(user));
+    setAuth(FirebaseUserToAuthConverter(user));
+    GetUser(user?.email === undefined ? null: user?.email, setCurrentUser)
   });
 };
 
