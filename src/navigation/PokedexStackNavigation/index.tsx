@@ -14,7 +14,7 @@ const PokedexStackNavigation = ({}: Props) => {
         name="MyPokedex"
         component={Pokedex}
         options={{
-          title: "",
+          title: '',
           headerTransparent: true,
         }}
       />

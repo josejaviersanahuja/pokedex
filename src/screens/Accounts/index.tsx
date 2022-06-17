@@ -7,10 +7,12 @@ import {useAuth} from '../../context/AuthContext';
 type Props = {};
 
 const Accounts = ({}: Props) => {
-  const {auth} = useAuth();
+  const {currentUser} = useAuth();
 
   return (
-    <SafeAreaView>{auth ? <UserPanel auth={auth} /> : <Login />}</SafeAreaView>
+    <SafeAreaView>
+      {currentUser ? <UserPanel currentUser={currentUser} /> : <Login />}
+    </SafeAreaView>
   );
 };
 

@@ -1,3 +1,5 @@
+import {Dispatch} from 'react';
+
 export type PokedexType = {
   name: string;
   url: string;
@@ -26,5 +28,12 @@ export type Auth = {
 
 export type User = {
   email: string;
-  coleccion: any;
+  favoritos: PokemonDetailsType[];
+};
+
+export type AuthContextType = {
+  auth: Auth | null;
+  currentUser: User | null;
+  setCurrentUser: Dispatch<User | null>;
+  setRefresh: Dispatch<(v: boolean) => boolean>;
 };

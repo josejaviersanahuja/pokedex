@@ -1,4 +1,11 @@
-import {Text, StyleSheet, TextInput, Button, ScrollView} from 'react-native';
+import {
+  Text,
+  StyleSheet,
+  TextInput,
+  Button,
+  ScrollView,
+  View,
+} from 'react-native';
 import React, {Dispatch} from 'react';
 import {useFormik} from 'formik';
 import * as yup from 'yup';
@@ -63,16 +70,18 @@ const SignUp = ({setIsSignUp}: Props) => {
           formik.setFieldValue('segunda_password', text);
         }}
       />
-      <Button
-        title="Entrar"
-        onPress={formik.handleSubmit}
-        disabled={formik.values.email === '' || formik.values.password === ''}
-      />
-      <Button
-        title="Volver Al Login"
-        onPress={() => setIsSignUp(false)}
-        color="#080"
-      />
+      <View style={styles.btnWrapper}>
+        <Button
+          title="Entrar"
+          onPress={formik.handleSubmit}
+          disabled={formik.values.email === '' || formik.values.password === ''}
+        />
+        <Button
+          title="Volver Al Login"
+          onPress={() => setIsSignUp(false)}
+          color="#080"
+        />
+      </View>
       <Text>{formik.errors.email}</Text>
       <Text>{formik.errors.password}</Text>
       <Text>{formik.errors.segunda_password}</Text>
@@ -117,5 +126,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     marginBottom: 20,
+  },
+  btnWrapper: {
+    flex: 0,
+    minHeight: 100,
+    justifyContent: 'space-around',
   },
 });

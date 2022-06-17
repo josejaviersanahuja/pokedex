@@ -1,11 +1,9 @@
 import {FirebaseAuthTypes} from '@react-native-firebase/auth';
-import { FirebaseFirestoreTypes } from '@react-native-firebase/firestore';
 import {
   PokedexType,
   PokemonDetailsType,
   PokemonExtraDetailsType,
   Auth,
-  User,
 } from './types';
 
 export const pokedexConverter = (result: any): PokedexType => {
@@ -36,8 +34,11 @@ export const PokemonDetailsConverter = (
       type: Array.isArray(response.types)
         ? response.types[0].type.name
         : 'notype',
-      imageUrl: response?.sprites?.other.dream_world.front_default || 'noimage',
+      imageUrl:
+        response?.sprites?.other.dream_world.front_default ||
+        'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/25.svg',
     };
+    console.log(pokDetail.imageUrl);
     return pokDetail;
   }
   return null;
@@ -75,11 +76,15 @@ export const FirebaseUserToAuthConverter = (
   return localUser;
 };
 
-export const FirestoreUserToUser = (doc: FirebaseFirestoreTypes.DocumentSnapshot) => {
-  if(!doc.exists) return null;
-  const returnableUser : User = {
-    email: doc.data()?.email || '',
-    coleccion: doc.data()?.coleccion || []
-  }
-  return returnableUser;
-}
+export const PokemonDetailsConverterFromDB = (
+  response: any,
+): PokemonDetailsType => {
+  const pokDetail: PokemonDetailsType = {
+    id: typeof response.id === 'number' ? response.id : 0,
+    name: typeof response.name === 'string' ? response.name : 'noname',
+    order: typeof response.order === 'number' ? response.order : 0,
+    type: response.type || 'notype',
+    imageUrl: response.imageUrl || 'noimage',
+  };
+  return pokDetail;
+};

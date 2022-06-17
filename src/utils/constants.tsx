@@ -1,3 +1,5 @@
+import {PokemonDetailsType} from './types';
+
 export const API_URL = 'https://pokeapi.co/api/v2/';
 
 export const POKEMON_TYPE_COLORS: {[index: string]: {bg: string; c: string}} = {
@@ -78,4 +80,12 @@ export const POKEMON_TYPE_COLORS: {[index: string]: {bg: string; c: string}} = {
 export const INITIAL_USER = {
   email: '',
   password: '',
+};
+
+export const IsThisPokFav = (
+  id: number,
+  favoritos: PokemonDetailsType[] = [],
+) => {
+  const array = favoritos.map(e => e.id);
+  return array.includes(id);
 };

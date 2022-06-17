@@ -14,13 +14,10 @@ const StatAndBar = ({name, base_stat}: Props) => {
 
   return (
     <View style={styles.barWrapper}>
-      <Text style={styles.texto}>
-        {`${capitalize(name)}:`.padEnd(
-          String(base_stat).length === 3 ? 15 : 16,
-          ' ',
-        )}{' '}
-        {`${base_stat}`}
-      </Text>
+      <View style={styles.textWrapper}>
+        <Text style={styles.texto}>{`${capitalize(name)}:`}</Text>
+        <Text style={styles.texto}>{`${base_stat}`}</Text>
+      </View>
       <View style={styles.bar}>
         <View
           style={{
@@ -43,8 +40,13 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginBottom: 2,
   },
+  textWrapper: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
   texto: {
-    fontFamily: 'monospace',
+    paddingRight: 5,
   },
   bar: {
     position: 'relative',

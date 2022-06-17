@@ -78,7 +78,7 @@ const MyFlatList = ({page, pokemons, setPage, isThereNext}: Props) => {
       renderItem={e => <PokemonCard pok={e.item} />}
       onEndReached={() => isThereNext && setPage(page + 1)}
       onEndReachedThreshold={0.4}
-      maxToRenderPerBatch={20}
+      maxToRenderPerBatch={60}
       initialNumToRender={20}
       getItemLayout={(data, index) => ({
         length: 170,

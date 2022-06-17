@@ -3,12 +3,14 @@ import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import React, {useEffect} from 'react';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
 import {PokemonDetailsType} from '../../utils/types';
-import {POKEMON_TYPE_COLORS} from '../../utils/constants';
+import {IsThisPokFav, POKEMON_TYPE_COLORS} from '../../utils/constants';
 import PokemonExtraDetails from './PokemonExtraDetails';
 import {SvgUri} from 'react-native-svg';
 import {capitalize} from 'lodash';
 import Heart from '../../icons/Heart';
 import BackIcon from '../../icons/BackIcon';
+import {useAuth} from '../../context/AuthContext';
+import {addPokFav, removePokFav} from '../../firebase/firestore';
 
 type Props = {
   navigation: NavigationProp<any, any>;
@@ -17,17 +19,43 @@ type Props = {
 
 const Pokemon = ({route, navigation}: Props) => {
   const {id, imageUrl, name, order, type} = route.params;
-
+  const {auth, currentUser, setRefresh} = useAuth();
+  const isFav = IsThisPokFav(id, currentUser?.favoritos);
+  const AddPokemonToFav = () => {
+    addPokFav(auth?.email, {id, imageUrl, name, order, type});
+    setRefresh((prev: boolean) => {
+      return !prev;
+    });
+  };
+  const RemovePokemonToFav = () => {
+    removePokFav(auth?.email, name);
+    setRefresh((prev: boolean) => {
+      return !prev;
+    });
+  };
   useEffect(() => {
     navigation.setOptions({
-      headerRight: () => (
-        <Heart
-          style={styles.headerStyleHeart}
-          height={45}
-          width={45}
-          strokeWidth={1}
-        />
-      ),
+      headerRight: () =>
+        isFav
+          ? auth && (
+              <Heart
+                style={styles.headerStyleHeart}
+                height={45}
+                width={45}
+                strokeWidth={1}
+                fill="#fff"
+                onPress={RemovePokemonToFav}
+              />
+            )
+          : auth && (
+              <Heart
+                style={styles.headerStyleHeart}
+                height={45}
+                width={45}
+                strokeWidth={1}
+                onPress={AddPokemonToFav}
+              />
+            ),
       headerLeft: () => (
         <BackIcon
           onPress={navigation.goBack}
@@ -35,7 +63,8 @@ const Pokemon = ({route, navigation}: Props) => {
         />
       ),
     });
-  }, [navigation, route]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigation, route, isFav]);
 
   return (
     <SafeAreaView>

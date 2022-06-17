@@ -50,16 +50,18 @@ const Login = ({}: Props) => {
           formik.setFieldValue('password', text);
         }}
       />
-      <Button
-        title="Entrar"
-        onPress={formik.handleSubmit}
-        disabled={formik.values.email === '' || formik.values.password === ''}
-      />
-      <Button
-        title="Primera vez aquí?"
-        onPress={() => setIsSignUp(true)}
-        color="#080"
-      />
+      <View style={styles.btnWrapper}>
+        <Button
+          title="Entrar"
+          onPress={formik.handleSubmit}
+          disabled={formik.values.email === '' || formik.values.password === ''}
+        />
+        <Button
+          title="Primera vez aquí?"
+          onPress={() => setIsSignUp(true)}
+          color="#080"
+        />
+      </View>
       <Text>{formik.errors.email}</Text>
       <Text>{formik.errors.password}</Text>
     </View>
@@ -99,5 +101,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     marginBottom: 20,
+  },
+  btnWrapper: {
+    flex: 0,
+    minHeight: 100,
+    justifyContent: 'space-around',
   },
 });
