@@ -38,7 +38,6 @@ export const PokemonDetailsConverter = (
         response?.sprites?.other.dream_world.front_default ||
         'https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/25.svg',
     };
-    console.log(pokDetail.imageUrl);
     return pokDetail;
   }
   return null;

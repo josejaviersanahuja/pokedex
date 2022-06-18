@@ -1,8 +1,8 @@
 /* eslint-disable react-native/no-inline-styles */
-import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
-import React, {useEffect} from 'react';
+import {ActivityIndicator, SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import React, {Dispatch, useEffect, useState} from 'react';
 import {NavigationProp, RouteProp} from '@react-navigation/native';
-import {PokemonDetailsType} from '../../utils/types';
+import {Auth, PokemonDetailsType} from '../../utils/types';
 import {IsThisPokFav, POKEMON_TYPE_COLORS} from '../../utils/constants';
 import PokemonExtraDetails from './PokemonExtraDetails';
 import {SvgUri} from 'react-native-svg';
@@ -20,42 +20,32 @@ type Props = {
 const Pokemon = ({route, navigation}: Props) => {
   const {id, imageUrl, name, order, type} = route.params;
   const {auth, currentUser, setRefresh} = useAuth();
-  const isFav = IsThisPokFav(id, currentUser?.favoritos);
+  const [isFav, setIsFav] = useState(IsThisPokFav(id, currentUser?.favoritos));
+
   const AddPokemonToFav = () => {
-    addPokFav(auth?.email, {id, imageUrl, name, order, type});
+    addPokFav(auth?.email, {id, imageUrl, name, order, type})
+      ?.then(()=> setIsFav(true));
     setRefresh((prev: boolean) => {
       return !prev;
     });
   };
+
   const RemovePokemonToFav = () => {
-    removePokFav(auth?.email, name);
+    removePokFav(auth?.email, name)
+      ?.then(()=> setIsFav(false));
     setRefresh((prev: boolean) => {
       return !prev;
     });
   };
   useEffect(() => {
     navigation.setOptions({
-      headerRight: () =>
-        isFav
-          ? auth && (
-              <Heart
-                style={styles.headerStyleHeart}
-                height={45}
-                width={45}
-                strokeWidth={1}
-                fill="#fff"
-                onPress={RemovePokemonToFav}
-              />
-            )
-          : auth && (
-              <Heart
-                style={styles.headerStyleHeart}
-                height={45}
-                width={45}
-                strokeWidth={1}
-                onPress={AddPokemonToFav}
-              />
-            ),
+      headerRight: () => (
+        <LikeBtn 
+          isFav={isFav} 
+          auth={auth} 
+          AddPokemonToFav={AddPokemonToFav} 
+          RemovePokemonToFav={RemovePokemonToFav}
+        />),
       headerLeft: () => (
         <BackIcon
           onPress={navigation.goBack}
@@ -160,3 +150,36 @@ const styles = StyleSheet.create({
     color: '#000',
   },
 });
+
+type LikeBtnProps = {
+  isFav: boolean;
+  auth: Auth | null;
+  RemovePokemonToFav: () => void;
+  AddPokemonToFav: () => void;
+}
+const LikeBtn = ({isFav, auth, RemovePokemonToFav, AddPokemonToFav}: LikeBtnProps) => {
+  return (<>
+    {
+      isFav
+          ? auth && (
+              <Heart
+                style={styles.headerStyleHeart}
+                height={45}
+                width={45}
+                strokeWidth={1}
+                fill="#fff"
+                onPress={RemovePokemonToFav}
+              />
+            )
+          : auth && (
+              <Heart
+                style={styles.headerStyleHeart}
+                height={45}
+                width={45}
+                strokeWidth={1}
+                onPress={AddPokemonToFav}
+              />
+            )
+    }
+  </>)
+}

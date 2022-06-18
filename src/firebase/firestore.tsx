@@ -6,7 +6,7 @@ import {PokemonDetailsType, User} from '../utils/types';
 const db = firestore();
 
 export const PostNewUser = (email: string) => {
-  return db.collection('users').doc(email).set({email, coleccion: []});
+  return db.collection('users').doc(email).set({email});
 };
 
 export const SyncUser = (email: string, setUser: Dispatch<User | null>) => {
@@ -52,7 +52,10 @@ export const addPokFav = (
   return subCollectionRef.doc(pok.name).set(pok);
 };
 
-export const removePokFav = (email: string | undefined, name: string) => {
+export const removePokFav = (
+    email: string | undefined, 
+    name: string,
+  ) => {
   if (email === undefined) {
     return;
   }

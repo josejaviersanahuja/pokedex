@@ -1,4 +1,4 @@
-import {StyleSheet, View} from 'react-native';
+import {ActivityIndicator, StyleSheet, View} from 'react-native';
 import React, {useEffect, useState} from 'react';
 import {getPokemonExtraDetails} from '../../../api/PokemonController';
 import {PokemonExtraDetailConverter} from '../../../utils/typeConverters';
@@ -13,16 +13,17 @@ type Props = {
 const PokemonExtraDetails = ({id}: Props) => {
   const [extraDetails, setExtraDetails] =
     useState<PokemonExtraDetailsType | null>(null);
-
+  const [isLoading, setIsloading] = useState(true);
   useEffect(() => {
     getPokemonExtraDetails(id).then(response => {
       setExtraDetails(PokemonExtraDetailConverter(response));
+      setIsloading(false);
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (!extraDetails) {
-    return null;
+    return <>{isLoading && <ActivityIndicator size={60} style={styles.extraDetailWrapper}/>}</>;
   }
   return (
     <View style={styles.extraDetailWrapper}>
