@@ -1,4 +1,4 @@
-package com.pokedex;
+package com.zitrojj.pokedex;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;
