@@ -65,7 +65,7 @@ export default Favorites;
 const styles = StyleSheet.create({
   main: {
     marginBottom: 40,
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
   },
   texto: {
     padding: 20,
