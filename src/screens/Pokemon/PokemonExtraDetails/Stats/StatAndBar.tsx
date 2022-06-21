@@ -47,6 +47,7 @@ const styles = StyleSheet.create({
   },
   texto: {
     paddingRight: 5,
+    color: '#000'
   },
   bar: {
     position: 'relative',

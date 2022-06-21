@@ -43,6 +43,7 @@ const SignUp = ({setIsSignUp}: Props) => {
       <Text style={styles.title}>Iniciar Sesión</Text>
       <TextInput
         placeholder="Email"
+        placeholderTextColor={'#999'}
         style={styles.input}
         autoCapitalize="none"
         value={formik.values.email}
@@ -52,6 +53,7 @@ const SignUp = ({setIsSignUp}: Props) => {
       />
       <TextInput
         placeholder="Contraseña"
+        placeholderTextColor={'#999'}
         style={styles.input}
         autoCapitalize="none"
         secureTextEntry
@@ -62,6 +64,7 @@ const SignUp = ({setIsSignUp}: Props) => {
       />
       <TextInput
         placeholder="Validar Contraseña"
+        placeholderTextColor={'#999'}
         style={styles.input}
         autoCapitalize="none"
         secureTextEntry

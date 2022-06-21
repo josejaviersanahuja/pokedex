@@ -33,6 +33,7 @@ const Login = ({}: Props) => {
       <Text style={styles.title}>Iniciar Sesión</Text>
       <TextInput
         placeholder="Nombre de usuario"
+        placeholderTextColor={'#999'}
         style={styles.input}
         autoCapitalize="none"
         value={formik.values.email}
@@ -42,6 +43,7 @@ const Login = ({}: Props) => {
       />
       <TextInput
         placeholder="Contraseñas"
+        placeholderTextColor={'#999'}
         style={styles.input}
         autoCapitalize="none"
         secureTextEntry
