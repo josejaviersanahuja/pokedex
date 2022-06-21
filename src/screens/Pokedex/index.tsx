@@ -85,7 +85,7 @@ const MyFlatList = ({page, pokemons, setPage, isThereNext}: Props) => {
         offset: 170 * index,
         index,
       })}
-      ListFooterComponent={isThereNext ? <ActivityIndicator /> : null}
+      ListFooterComponent={isThereNext ? <ActivityIndicator size={60}/> : null}
     />
   );
 };
@@ -99,10 +99,6 @@ const MemoizedMyFlatList = React.memo(MyFlatList, arePropsEqual);
 const styles = StyleSheet.create({
   main: {
     marginBottom: 40,
-    paddingHorizontal: 20,
-  },
-  botones: {
-    marginHorizontal: 20,
-    margin: 10,
+    paddingHorizontal: 10,
   },
 });

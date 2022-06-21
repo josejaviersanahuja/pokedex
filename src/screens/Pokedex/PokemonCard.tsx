@@ -1,4 +1,4 @@
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Dimensions} from 'react-native';
 import React from 'react';
 import {capitalize} from 'lodash';
 import {PokemonDetailsType, ScreenTag} from '../../utils/types';
@@ -6,6 +6,8 @@ import {POKEMON_TYPE_COLORS} from '../../utils/constants';
 import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {SvgUri} from 'react-native-svg';
+
+const pokemonCardWidth = (Dimensions.get("screen").width-60) / 2;
 
 type Props = {
   pok: PokemonDetailsType | null;
@@ -74,7 +76,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     height: 130,
-    width: 150,
+    width: pokemonCardWidth,
     marginVertical: 20,
     marginHorizontal: 10,
     padding: 10,

@@ -126,6 +126,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 10,
     marginBottom: 20,
+    color: '#000',
   },
   btnWrapper: {
     flex: 0,
